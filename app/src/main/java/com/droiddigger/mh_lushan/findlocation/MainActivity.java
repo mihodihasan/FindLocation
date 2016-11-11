@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends FragmentActivity {
 
     private View mLayout;
@@ -38,29 +40,28 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == REQUEST_LOCATION_FINE) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Snackbar.make(mLayout, "Permission Available",
-                        Snackbar.LENGTH_LONG).show();
-            } else {
-                Snackbar.make(mLayout, "permission was NOT granted",
-                        Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                REQUEST_LOCATION_FINE);
-                    }
-                }).show();
-
-            }
-
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+//        if (requestCode == REQUEST_LOCATION_FINE) {
+//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Snackbar.make(mLayout, "Permission Available",
+//                        Snackbar.LENGTH_LONG).show();
+//            } else {
+//                Snackbar.make(mLayout, "permission was NOT granted",
+//                        Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        ActivityCompat.requestPermissions(MainActivity.this,
+//                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+//                                REQUEST_LOCATION_FINE);
+//                    }
+//                }).show();
+//
+//            }
+//
+//        } else {
+//            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        }
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
-
-
 
 
     @Override
@@ -73,8 +74,8 @@ public class MainActivity extends FragmentActivity {
         mLayout = findViewById(R.id.activity_main);
 
         GPSTracker tracker = new GPSTracker(this);
-        Location location=tracker.getLocation(this);
-        Toast.makeText(MainActivity.this,location.toString(),Toast.LENGTH_SHORT).show();
+        Location location = tracker.getLocation(this);
+        Toast.makeText(MainActivity.this, location + "", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -117,7 +118,7 @@ public class MainActivity extends FragmentActivity {
             this.mContext = context;
 //            AskPermission();
             getLocation(context);
-            Log.d("LSN", " got it"+ location );
+            Log.d("LSN", " got it" + location);
         }
 
         /**
@@ -125,18 +126,17 @@ public class MainActivity extends FragmentActivity {
          */
 
 
-
-        public void AskPermission() {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestLocationPermission();
-
-            } else {
-//            us.setMyLocationButtonEnabled(true);
-//            mMap.setMyLocationEnabled(true);
-            }
-
-        }
+//        public void AskPermission() {
+//            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                requestLocationPermission();
+//
+//            } else {
+////            us.setMyLocationButtonEnabled(true);
+////            mMap.setMyLocationEnabled(true);
+//            }
+//
+//        }
 
         private void requestLocationPermission() {
 
@@ -158,14 +158,10 @@ public class MainActivity extends FragmentActivity {
                         REQUEST_LOCATION_FINE);
             }
         }
+
         public Location getLocation(Context context) {
-            int permissionCheck = ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.ACCESS_FINE_LOCATION);
-            if (permissionCheck == PackageManager
-                    .PERMISSION_DENIED) {
-                AskPermission();
-                Log.d("LSN", "Permission Denied");
-            } //else {
+
+
 
             try {
                 locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -217,7 +213,7 @@ public class MainActivity extends FragmentActivity {
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(provider_info);
                         updateGPSCoordinates();
-                        Toast.makeText(context,location.toString(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, location.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
 
